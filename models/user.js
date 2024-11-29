@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 
 const userSchema = mongoose.Schema({
-    id: { type: mongoose.Schema.Types.ObjectId },
+    id: { type: mongoose.Schema.Types.ObjectId, auto: true },
     name: { type: String, required: true },
     password: { type: String, required: true }
 });
