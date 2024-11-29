@@ -7,5 +7,5 @@ const app = Express();
 const server = http.createServer(app);
 
 server.listen(port, () => {
-    console.log("server ativo")
+    console.log("server active");
 })
