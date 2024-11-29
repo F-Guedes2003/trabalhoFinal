@@ -29,15 +29,40 @@ const login = async (req, res) => {
     const isPasswordValid = await bcrypt.compare(password, user.password);
 
     if(!isPasswordValid || !user) return res.status(401).json({message: "Wrong data!"});
-    const token = jwt.sign(
+    const accessToken = jwt.sign(
+        {name},
+        tokenKey,
+        {expiresIn: "1h", algorithm: "HS256"}
+    );
+    const refreshToken = jwt.sign(
         {name},
         tokenKey,
         {expiresIn: "1d", algorithm: "HS256"}
     );
 
     return res.status(200).json( {
-        accessToken: token
+        accessToken,
+        refreshToken
     } );
 }
 
-export { registerUser, login };
+const refreshToken = async (req, res) => {
+    const refreshToken = req.body.refreshToken;
+    const privateKey = process.env.JWT_KEY;
+    if(jwt.verify(refreshToken, privateKey)) {
+        const decoded = jwt.decode(refreshToken)
+        const name = decoded.name;
+        console.log(name);
+        const accessToken = jwt.sign( 
+            {name},
+            privateKey,
+            {expiresIn: "1h", algorithm: "HS256"}
+        );
+        
+        return res.status(200).json( {accessToken} );
+    }
+
+    return res.status(403).json( {message: "Tokens expired!"} );
+}
+
+export { registerUser, login, refreshToken };
