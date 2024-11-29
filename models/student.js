@@ -7,3 +7,5 @@ const studentSchema = mongoose.Schema({
     nota1: { type: Number },
     nota2: { type: Number },
 })
+
+export default student = mongoose.model("student", studentSchema);
