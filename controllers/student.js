@@ -20,4 +20,13 @@ const getAllStudents = async (req, res) => {
     return res.status(200).json(students);
 }
 
-export { createStudent, getAllStudents  };
+const getStudentById = async (req, res) => {
+    const urlId = req.params.id;
+    const student = await Student.find({_id: urlId})
+
+    if(student) return res.status(200).json(student);
+
+    return res.status(400).json({message: "Student not found"});
+}
+
+export { createStudent, getAllStudents, getStudentById  };

@@ -1,5 +1,5 @@
 import express from 'express';
-import { createStudent, getAllStudents } from '../controllers/student.js';
+import { createStudent, getAllStudents, getStudentById } from '../controllers/student.js';
 import { authenticateJwt } from '../middlewares.js';
 
 const router = express.Router();
@@ -13,5 +13,7 @@ router.get('/', (req, res) => {
 router.post('/alunos', authenticateJwt, createStudent);
 
 router.get('/alunos', authenticateJwt, getAllStudents);
+
+router.get('/alunos/:id', authenticateJwt, getStudentById);
 
 export default router;

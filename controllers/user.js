@@ -26,9 +26,11 @@ const login = async (req, res) => {
     const tokenKey = process.env.JWT_KEY;
     const user = await User.findOne( {name} );
 
+    if(!password || !user) return res.status(401).json({message: "Wrong data!"});
+
     const isPasswordValid = await bcrypt.compare(password, user.password);
 
-    if(!isPasswordValid || !user) return res.status(401).json({message: "Wrong data!"});
+    if(!isPasswordValid) return res.status(401).json({message: "Wrong data!"});
     const accessToken = jwt.sign(
         {name},
         tokenKey,
@@ -49,7 +51,7 @@ const login = async (req, res) => {
 const refreshToken = async (req, res) => {
     const refreshToken = req.body.refreshToken;
     const privateKey = process.env.JWT_KEY;
-    
+
     if(jwt.verify(refreshToken, privateKey)) {
         const decoded = jwt.decode(refreshToken)
         const name = decoded.name;
