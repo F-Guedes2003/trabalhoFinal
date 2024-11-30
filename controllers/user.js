@@ -49,6 +49,7 @@ const login = async (req, res) => {
 const refreshToken = async (req, res) => {
     const refreshToken = req.body.refreshToken;
     const privateKey = process.env.JWT_KEY;
+    
     if(jwt.verify(refreshToken, privateKey)) {
         const decoded = jwt.decode(refreshToken)
         const name = decoded.name;
