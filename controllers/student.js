@@ -29,4 +29,17 @@ const getStudentById = async (req, res) => {
     return res.status(400).json({message: "Student not found"});
 }
 
-export { createStudent, getAllStudents, getStudentById  };
+const getAverage = async (req, res) => {
+    const students = await Student.find();
+    const transformedStudents = students.map(item => {
+        const average = ( item["nota1"] + item["nota2"] ) / 2; 
+
+        return {name: item.name, average};
+    });
+    
+    return res.status(200).json(transformedStudents);
+
+
+}
+
+export { createStudent, getAllStudents, getStudentById, getAverage  };
