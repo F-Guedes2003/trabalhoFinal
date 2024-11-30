@@ -38,8 +38,20 @@ const getAverage = async (req, res) => {
     });
     
     return res.status(200).json(transformedStudents);
-
-
 }
 
-export { createStudent, getAllStudents, getStudentById, getAverage  };
+const getStatus = async (req, res) => {
+    const students = await Student.find();
+    const transformedStudents = students.map(item => {
+        const average = ( item["nota1"] + item["nota2"] ) / 2; 
+
+        if(average >= 6) return {name: item.name, status: "Aprovado"};
+
+        return {name: item.name, status: "Reprovado"};
+    });
+    
+    return res.status(200).json(transformedStudents);
+}
+
+
+export { createStudent, getAllStudents, getStudentById, getAverage, getStatus  };
