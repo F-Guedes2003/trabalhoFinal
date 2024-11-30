@@ -53,5 +53,16 @@ const getStatus = async (req, res) => {
     return res.status(200).json(transformedStudents);
 }
 
+const updateStudent = async (req, res) => {
+    const id = req.params.id;
+    const bluePrint = req.body;
+    if(!id) return res.status(400).json("Id required");
 
-export { createStudent, getAllStudents, getStudentById, getAverage, getStatus  };
+    const updatedStudent = await Student.findOneAndUpdate({"_id": id}, bluePrint, {new: true, runValidators: true});
+    
+    if(!updatedStudent) return res.status(400).json({message: "Failed to update student"});
+
+    return res.status(200).json({message: "Student updated with success"});
+}
+
+export { createStudent, getAllStudents, getStudentById, getAverage, getStatus, updateStudent  };

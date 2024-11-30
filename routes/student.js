@@ -1,6 +1,6 @@
 import express from 'express';
 import { createStudent, getAllStudents, getStudentById, getAverage,
-    getStatus
+    getStatus, updateStudent
  } from '../controllers/student.js';
 import { authenticateJwt } from '../middlewares.js';
 
@@ -22,5 +22,6 @@ router.get('/alunos/aprovados', authenticateJwt, getStatus);
 
 router.get('/alunos/:id', authenticateJwt, getStudentById);
 
+router.put('/alunos/:id', authenticateJwt, updateStudent); 
 
 export default router;
