@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import { authenticateJwt } from "../middlewares.js";
 import Student from "../models/student.js";
 
@@ -21,12 +22,18 @@ const getAllStudents = async (req, res) => {
 }
 
 const getStudentById = async (req, res) => {
-    const urlId = req.params.id;
-    const student = await Student.find({_id: urlId})
 
-    if(student) return res.status(200).json(student);
+    try{
+        const urlId = req.params.id;
+        const isValidId = mongoose.Types.ObjectId.isValid(urlId);
+        
+        if(!isValidId) return res.status(400).json("user not found");
+        const student = await Student.find({_id: urlId})
 
-    return res.status(400).json({message: "Student not found"});
+        if(student) return res.status(200).json(student);
+
+        return res.status(400).json({message: "Student not found"});
+    } catch(err) { console.err(err); }
 }
 
 const getAverage = async (req, res) => {
@@ -56,7 +63,9 @@ const getStatus = async (req, res) => {
 const updateStudent = async (req, res) => {
     const id = req.params.id;
     const bluePrint = req.body;
-    if(!id) return res.status(400).json("Id required");
+    const isValidId = mongoose.Types.ObjectId.isValid(id);
+        
+    if(!isValidId) return res.status(400).json("user not found");
 
     const updatedStudent = await Student.findOneAndUpdate({"_id": id}, bluePrint, {new: true, runValidators: true});
     
@@ -67,9 +76,11 @@ const updateStudent = async (req, res) => {
 
 const deleteStudent = async (req, res) => {
     const id = req.params.id;
-    const bluePrint = req.body;
     if(!id) return res.status(400).json("Id required");
-
+    const isValidId = mongoose.Types.ObjectId.isValid(id);
+        
+    if(!isValidId) return res.status(400).json("user not found");
+    
     const deleted = await Student.deleteOne({"_id": id});
     
     if(deleted.deletedCount === 0) return res.status(400).json({message: "Failed to delete student"});
