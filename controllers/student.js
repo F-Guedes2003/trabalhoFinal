@@ -65,4 +65,16 @@ const updateStudent = async (req, res) => {
     return res.status(200).json({message: "Student updated with success"});
 }
 
-export { createStudent, getAllStudents, getStudentById, getAverage, getStatus, updateStudent  };
+const deleteStudent = async (req, res) => {
+    const id = req.params.id;
+    const bluePrint = req.body;
+    if(!id) return res.status(400).json("Id required");
+
+    const deleted = await Student.deleteOne({"_id": id});
+    
+    if(deleted.deletedCount === 0) return res.status(400).json({message: "Failed to delete student"});
+
+    return res.status(200).json({message: "Student deleted with success"});
+}
+
+export { createStudent, getAllStudents, getStudentById, getAverage, getStatus, updateStudent, deleteStudent  };
