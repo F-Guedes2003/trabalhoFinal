@@ -15,4 +15,9 @@ const createStudent = (req, res) => {
     res.status(201).json({ message: "Student created with success" });
 }
 
-export { createStudent };
+const getAllStudents = async (req, res) => {
+    const students = await Student.find();
+    return res.status(200).json(students);
+}
+
+export { createStudent, getAllStudents  };
